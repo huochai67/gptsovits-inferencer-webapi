@@ -1,0 +1,3 @@
+[submodule "srcs/GPTSoVITS"]
+	path = srcs/GPTSoVITS
+	url = https://github.com/RVC-Boss/GPT-SoVITS.git
