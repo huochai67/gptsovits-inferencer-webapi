@@ -1,6 +1,5 @@
 import io
 from card import Card
-from model.bert_model import BertModel
 from cardmanager import modelManager
 from tts import get_tts_wav
 
@@ -11,7 +10,7 @@ async def synthesize(card: Card, text: str, language: str):
     reference = card.get_reference()
 
     # Synthesize audio
-    synthesis_result = await get_tts_wav(
+    synthesis_result = get_tts_wav(
         sovits_model=card.get_sovits_model(),
         gpt_model=card.get_gpt_model(),
         prompt=reference.prompt,
