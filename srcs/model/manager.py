@@ -44,24 +44,20 @@ class ModelManager:
             return container[key]
 
     def get_gpt_model(self, modelname: str) -> GPTModel:
-        return self.get_from_dict(modelname, self.gpt_models)
+        if not modelname in self.gpt_models:
+            model = GPTModel(
+                f"{self.data_dir}/gpt_models/{modelname}.ckpt", self.use_cuda, self.device
+            )
+            self.gpt_models[modelname] = model
+        return self.gpt_models[modelname]
 
-    def get_sovits(self, modelname: str) -> SoVITSModel:
-        return self.get_from_dict(modelname, self.sovits_models)
-
-    def load_gpt_model(self, filename: str) -> GPTModel:
-        model = GPTModel(
-            f"{self.data_dir}/gpt_models/{filename}.ckpt", self.use_cuda, self.device
-        )
-        self.gpt_models[Path(filename).stem] = model
-        return model
-
-    def load_sovits_model(self, filename: str) -> SoVITSModel:
-        model = SoVITSModel(
-            f"{self.data_dir}/sovits_models/{filename}.pth", self.use_cuda, self.device
-        )
-        self.sovits_models[Path(filename).stem] = model
-        return model
+    def get_sovits_model(self, modelname: str) -> SoVITSModel:
+        if not modelname in self.sovits_models:
+            model = SoVITSModel(
+                f"{self.data_dir}/sovits_models/{modelname}.pth", self.use_cuda, self.device
+            )
+            self.sovits_models[modelname] = model
+        return self.sovits_models[modelname]
 
     def __init__(self, data_dir: str, use_cuda: bool = True, lazyload: bool = True):
         self.use_cuda = supportcuda and use_cuda
@@ -83,6 +79,6 @@ class ModelManager:
             self.get_cnhubert_model()
 
             for gpt_model in Path(f"{data_dir}/gpt_models").iterdir():
-                self.load_gpt_model(gpt_model.stem)
+                self.get_gpt_model(gpt_model.stem)
             for sovits_model in Path(f"{data_dir}/sovits_models").iterdir():
-                self.load_sovits_model(sovits_model.stem)
+                self.get_sovits_model(sovits_model.stem)

@@ -9,8 +9,8 @@ from model.manager import GPTModel, SoVITSModel, BertModel, CnhubertModel, Model
 
 class Card:
     name: str
-    gpt_model_path: str
-    sovits_model_path: str
+    gpt_model_name: str
+    sovits_model_name: str
 
     gpt_model: GPTModel = None
     sovits_model: SoVITSModel = None
@@ -19,22 +19,22 @@ class Card:
     modelManger: ModelManager
 
     def get_gpt_model_path(self) -> str:
-        return f"{getdatadir()}/models/gpt_models/{self.gpt_model_path}.ckpt"
+        return f"{getdatadir()}/models/gpt_models/{self.gpt_model_name}.ckpt"
 
     def get_sovits_model_path(self) -> str:
-        return f"{getdatadir()}/models/sovits_models/{self.sovits_model_path}.pth"
+        return f"{getdatadir()}/models/sovits_models/{self.sovits_model_name}.pth"
 
     def get_ref_audio_path(self) -> str:
         return f"{getdatadir()}/references/{self.reference_audio}"
 
     def get_gpt_model(self) -> GPTModel:
         if not self.gpt_model:
-            self.gpt_model = self.modelManger.load_gpt_model(self.gpt_model_path)
+            self.gpt_model = self.modelManger.get_gpt_model(self.gpt_model_name)
         return self.gpt_model
 
     def get_sovits_model(self) -> GPTModel:
         if not self.sovits_model:
-            self.sovits_model = self.modelManger.load_sovits_model(self.sovits_model_path)
+            self.sovits_model = self.modelManger.get_sovits_model(self.sovits_model_name)
         return self.sovits_model
 
     def get_reference(self) -> CardRefer:
@@ -61,8 +61,8 @@ class Card:
         lazyload: bool,
     ):
         self.name = name
-        self.gpt_model_path = gpt_model
-        self.sovits_model_path = sovits_model
+        self.gpt_model_name = gpt_model
+        self.sovits_model_name = sovits_model
         self.reference_audio = reference_audio
         self.reference_text = reference_text
         self.reference_language = reference_language
