@@ -1,9 +1,5 @@
-import os
-import signal
-import sys
 import uvicorn
-from fastapi import FastAPI, Request
-from fastapi.staticfiles import StaticFiles
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 import fs
@@ -15,52 +11,35 @@ from utils2 import make_response
 from webapi import WebAPI
 
 
-def main():
-    app = FastAPI(
-        title="GPT-SoVITS-Inference-Webapi",
-        description="Inferencer for GPT-SoVITS",
-        summary="Powered by Nicefish4520",
-        version="0.9dev",
-        contact={
-            "name": "NiceFish4520",
-            "email": "kcass774@gmail.com",
-        },
-        license_info={
-            "name": "GPLv3",
-            "url": "https://www.gnu.org/licenses/gpl-3.0.en.html#license-text",
-        },
-    )
+app = FastAPI(
+    title="GPT-SoVITS-Inference-Webapi",
+    description="Inferencer for GPT-SoVITS",
+    summary="Powered by Nicefish4520",
+    version="0.9dev",
+    contact={
+        "name": "NiceFish4520",
+        "email": "kcass774@gmail.com",
+    },
+    license_info={
+        "name": "GPLv3",
+        "url": "https://www.gnu.org/licenses/gpl-3.0.en.html#license-text",
+    },
+)
 
-    origins = [
-        "http://localhost",
-        "http://localhost:5173",
-        "*",
-    ]
+origins = [
+    "http://localhost",
+    "http://localhost:5173",
+    "*",
+]
 
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origins=origins,
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
-    )
-    WebAPI.init(api=app)
-
-    #handler ctrl c
-    isShutdown = False
-    @app.middleware("http")
-    async def shutdown(request: Request, call_next):
-        if isShutdown:
-            return make_response(False, "Server is shutdowning")
-        return await call_next(request)
-    def signal_handler(signal, frame):
-        isShutdown = True
-        print("wait for tasks")
-        sys.exit(0)
-    signal.signal(signal.SIGINT, signal_handler)
-
-    uvicorn.run(app, host="0.0.0.0", port=8000)
-
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+WebAPI.init(api=app)
 
 if __name__ == "__main__":
-    main()
+    uvicorn.run(app, host="0.0.0.0", port=8001)
