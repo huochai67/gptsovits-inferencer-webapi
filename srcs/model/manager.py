@@ -10,7 +10,7 @@ import torch
 supportcuda = torch.cuda.is_available()
 
 
-class ManagerImpl:
+class ModelManager:
     gpt_models = {}
     sovits_models = {}
     bert_model: BertModel | None = None

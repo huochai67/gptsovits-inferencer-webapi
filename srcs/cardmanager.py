@@ -4,7 +4,9 @@ from card import Card
 from result import Result, Ok, Err
 
 from fs import getdatadir
+from model.manager import ModelManager
 
+modelManager = ModelManager(f"{getdatadir()}/models")
 
 class CardManagerImpl:
     cards: dict = {}
@@ -13,7 +15,7 @@ class CardManagerImpl:
         for entry in Path(dirpath).iterdir():
             if entry.is_file():
                 # try:
-                card: Card = Card.from_file(entry)
+                card: Card = Card.from_file(entry, modelManager)
                 self.cards[card.name] = card
                 # except
 
